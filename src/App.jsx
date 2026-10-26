@@ -61,6 +61,18 @@ function App() {
         setList(newList);
     }
 
+    const totalIncome= list.reduce((sum ,item)=>{
+        // 타입이 income(지출) 것들의 합계
+        // 함수 몸통에 써주는 내용은 하나의 요소가 빠져나온 상태의 식
+        // item은 객체
+        return item.type === "income" ? sum + item.amount : sum;
+    },0)
+    const totalExpense= list.reduce((sum, item)=>{
+        // 타입이 expense인 것들의 합계
+        return item.type === "expense" ? sum + item.amount : sum;
+    },0)
+    const balance= totalIncome - totalExpense;
+
     return (
         <>
             <h2>간단 가계부</h2>
@@ -119,7 +131,9 @@ function App() {
                         <tr key={index}>
                             <td>{item.type ==="income" ? "수입" : "지출"}</td>
                             <td>{item.title}</td>
-                            <td>
+                            <td style = {{
+                                color: item.type === "income" ? "blue" : "red"
+                            }}>
                                 {item.type ==="income" ? "+" : "-"}
                                 {item.amount.toLocaleString()}
                             </td>
@@ -136,9 +150,13 @@ function App() {
                 })}
                 </tbody>
             </table>
+            {/*
+            list라고 하는  array(state)를 가지고 하나의 값을 구하는 행위
+            => list.reduce() => 얘의 코드가 길어지겠다 => 위에 가서 써야지
+            */}
 
-            <h3>수입 : 0원 / 지출 : 0원</h3>
-            <h3>잔액 : 0원</h3>
+            <h3>수입 : {totalIncome.toLocaleString()}원 / 지출 : {totalExpense.toLocaleString()}원</h3>
+            <h3>잔액 : {balance.toLocaleString()}원</h3>
         </>
     );
 }
